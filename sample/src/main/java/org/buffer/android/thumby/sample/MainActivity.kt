@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import org.buffer.android.thumby.ThumbyActivity
 import org.buffer.android.thumby.ThumbyActivity.Companion.EXTRA_THUMBNAIL_POSITION
 import org.buffer.android.thumby.ThumbyActivity.Companion.EXTRA_URI
@@ -38,10 +41,11 @@ class MainActivity : AppCompatActivity() {
                     startActivityForResult(ThumbyActivity.getStartIntent(this, it), REQUEST_CODE_PICK_THUMBNAIL)
                 }
             } else if (requestCode == REQUEST_CODE_PICK_THUMBNAIL) {
-                val imageUri = data?.getParcelableExtra(EXTRA_URI) as Uri
+                val imageUri = data?.getParcelableExtra(EXTRA_URI) as? Uri ?: return
                 val location = data.getLongExtra(EXTRA_THUMBNAIL_POSITION, 0)
-                val bitmap = ThumbyUtils.getBitmapAtFrame(this, imageUri, location,
-                    200, 200)
+                Log.e("imageUri---->", "$imageUri")
+                Log.e("location---->", "$location")
+                val bitmap = ThumbyUtils.getBitmapAtFrame(this, imageUri, location, 200, 200)
                 image.setImageBitmap(bitmap)
             }
         }

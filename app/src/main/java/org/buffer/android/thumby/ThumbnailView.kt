@@ -2,13 +2,13 @@ package org.buffer.android.thumby
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 
 class ThumbnailView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : ImageView(context, attrs) {
+) : AppCompatImageView(context, attrs) {
 
     init {
         scaleType = ScaleType.CENTER_CROP

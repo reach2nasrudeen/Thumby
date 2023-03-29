@@ -9,8 +9,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
+import kotlinx.android.synthetic.main.activity_thumby.view.*
 import kotlinx.android.synthetic.main.view_timeline.view.*
 import org.buffer.android.thumby.listener.SeekListener
 
@@ -31,7 +32,7 @@ class ThumbnailTimeline @JvmOverloads constructor(
                 loadThumbnails(it)
                 invalidate()
                 view_seek_bar.setDataSource(context, it, 4)
-                view_seek_bar.seekTo(currentSeekPosition.toInt())
+//                view_seek_bar.seekTo(currentSeekPosition.toInt())
             }
         }
 
@@ -64,8 +65,8 @@ class ThumbnailTimeline @JvmOverloads constructor(
         currentSeekPosition = (Math.round(event.x) - (seekViewWidth / 2)).toFloat()
 
         val availableWidth = container_thumbnails.width -
-                (layoutParams as LinearLayout.LayoutParams).marginEnd -
-                (layoutParams as LinearLayout.LayoutParams).marginStart
+                (layoutParams as RelativeLayout.LayoutParams).marginEnd -
+                (layoutParams as RelativeLayout.LayoutParams).marginStart
         if (currentSeekPosition + seekViewWidth > container_thumbnails.right) {
             currentSeekPosition = (container_thumbnails.right - seekViewWidth).toFloat()
         } else if (currentSeekPosition < container_thumbnails.left) {
@@ -83,8 +84,9 @@ class ThumbnailTimeline @JvmOverloads constructor(
         val metaDataSource = MediaMetadataRetriever()
         metaDataSource.setDataSource(context, uri)
 
-        val videoLength = (metaDataSource.extractMetadata(
-            MediaMetadataRetriever.METADATA_KEY_DURATION).toInt() * 1000).toLong()
+        val videoLength = ((metaDataSource.extractMetadata(
+            MediaMetadataRetriever.METADATA_KEY_DURATION
+        )?.toInt() ?: (0 * 1000))).toLong()
 
         val thumbnailCount = 7
 
@@ -92,7 +94,7 @@ class ThumbnailTimeline @JvmOverloads constructor(
 
         for (i in 0 until thumbnailCount - 1) {
             val frameTime = i * interval
-            var bitmap = metaDataSource.getFrameAtTime(frameTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+            var bitmap = metaDataSource.getFrameAtTime(frameTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC) ?: return
             try {
                 val targetWidth: Int
                 val targetHeight: Int
@@ -113,5 +115,9 @@ class ThumbnailTimeline @JvmOverloads constructor(
             container_thumbnails.addView(ThumbnailView(context).apply { setImageBitmap(bitmap) })
         }
         metaDataSource.release()
+    }
+
+    fun onPause() {
+        view_seek_bar.onPause()
     }
 }

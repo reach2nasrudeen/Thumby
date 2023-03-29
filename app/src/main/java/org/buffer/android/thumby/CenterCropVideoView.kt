@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 
@@ -29,17 +31,18 @@ class CenterCropVideoView @JvmOverloads constructor(
     }
 
     override fun onSurfaceTextureSizeChanged(
-        surface: SurfaceTexture?,
+        surface: SurfaceTexture,
         width: Int,
         height: Int
-    ) { }
+    ) {
+    }
 
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) { }
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {}
 
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean  = false
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean = false
 
     override fun onSurfaceTextureAvailable(
-        surface: SurfaceTexture?,
+        surface: SurfaceTexture,
         width: Int,
         height: Int
     ) {
@@ -54,18 +57,27 @@ class CenterCropVideoView @JvmOverloads constructor(
     }
 
     fun seekTo(milliseconds: Int) {
+        println("mediaPlayer---seekTo--->${milliseconds}")
         mediaPlayer?.seekTo(milliseconds)
     }
 
     fun getDuration(): Int {
-        return mediaPlayer?.duration ?: 0
+        println("mediaPlayer---getDuration--->${mediaPlayer?.duration}")
+        return try {
+            mediaPlayer?.duration ?: 0
+        } catch (exception: Exception) {
+            0
+        }
     }
 
     private fun prepare() {
         mediaPlayer?.setOnVideoSizeChangedListener { _, width, height ->
             videoWidth = width.toFloat() / videoSizeDivisor
-            videoHeight = height.toFloat()  / videoSizeDivisor
+            videoHeight = height.toFloat() / videoSizeDivisor
             updateTextureViewSize()
+
+        }
+        mediaPlayer?.setOnPreparedListener {
             seekTo(0)
         }
         mediaPlayer?.prepareAsync()
@@ -101,6 +113,17 @@ class CenterCropVideoView @JvmOverloads constructor(
             mediaPlayer = MediaPlayer()
         } else {
             mediaPlayer?.reset()
+        }
+    }
+
+    fun onPause() {
+        println("mediaPlayer---state--->${mediaPlayer == null}")
+        println("mediaPlayer---isPlaying--->${mediaPlayer?.isPlaying}")
+        if (mediaPlayer != null) {
+            if (mediaPlayer?.isPlaying == true) mediaPlayer?.pause()
+            mediaPlayer?.setOnPreparedListener(null)
+            mediaPlayer?.release()
+            mediaPlayer = null
         }
     }
 }

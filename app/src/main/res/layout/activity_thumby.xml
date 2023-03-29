@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -7,18 +7,25 @@
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+
 
     <org.buffer.android.thumby.CenterCropVideoView
             android:id="@+id/view_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp" />
+            android:layout_above="@+id/thumbs"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginBottom="14dp" />
 
     <org.buffer.android.thumby.ThumbnailTimeline
             android:id="@+id/thumbs"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/frames_video_height"
-            android:layout_gravity="center_horizontal" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="64dp" />
 
-</LinearLayout>
+</RelativeLayout>

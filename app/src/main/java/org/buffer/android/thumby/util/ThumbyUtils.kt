@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
-import org.buffer.android.utils.ApiLevelHelper
 
 object ThumbyUtils {
 
@@ -15,9 +14,9 @@ object ThumbyUtils {
         frameTime: Long,
         width: Int,
         height: Int
-    ): Bitmap {
+    ): Bitmap? {
         val mediaMetadataRetriever = MediaMetadataRetriever()
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.Q)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mediaMetadataRetriever.setDataSource(uri.path)
         } else {
             mediaMetadataRetriever.setDataSource(context, uri)
@@ -25,7 +24,7 @@ object ThumbyUtils {
         var bitmap = mediaMetadataRetriever.getFrameAtTime(frameTime,
             MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
         try {
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
+            bitmap = bitmap?.let { Bitmap.createScaledBitmap(it, width, height, false) }
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -4,7 +4,8 @@
         package="org.buffer.android.thumby.sample">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+            tools:ignore="ScopedStorage" />
 
     <application
             android:allowBackup="true"
@@ -14,13 +15,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:overrideLibrary="org.buffer.android.utils">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="org.buffer.android.thumby.ThumbyActivity"
+
+                android:theme="@style/AppTheme"
+                />
     </application>
 
 </manifest>
