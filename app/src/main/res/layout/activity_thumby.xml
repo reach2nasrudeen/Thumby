@@ -11,13 +11,11 @@
             android:layout_alignParentTop="true" />
 
 
-    <org.buffer.android.thumby.CenterCropVideoView
-            android:id="@+id/view_thumbnail"
+    <VideoView
+            android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/thumbs"
-            android:layout_below="@+id/toolbar"
-            android:layout_marginBottom="14dp" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar" />
 
     <org.buffer.android.thumby.ThumbnailTimeline
             android:id="@+id/thumbs"

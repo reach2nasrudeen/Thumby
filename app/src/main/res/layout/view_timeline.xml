@@ -17,9 +17,9 @@
 
         <org.buffer.android.thumby.CenterCropVideoView
                 android:id="@+id/view_seek_bar"
-                android:layout_gravity="start"
                 android:layout_width="@dimen/frames_video_height"
-                android:layout_height="@dimen/frames_video_height"/>
+                android:layout_height="@dimen/frames_video_height"
+                android:layout_gravity="start" />
 
     </FrameLayout>
 

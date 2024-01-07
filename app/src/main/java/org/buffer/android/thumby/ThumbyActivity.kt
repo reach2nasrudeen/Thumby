@@ -61,7 +61,10 @@ class ThumbyActivity : AppCompatActivity() {
     }
 
     private fun setupVideoContent() {
-        view_thumbnail.setDataSource(this, videoUri)
+        video_view.setVideoURI(videoUri)
+        video_view.setOnPreparedListener {
+            it.seekTo(0)
+        }
         thumbs.seekListener = seekListener
         thumbs.currentSeekPosition = intent.getLongExtra(EXTRA_THUMBNAIL_POSITION, 0).toFloat()
         thumbs.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -77,18 +80,19 @@ class ThumbyActivity : AppCompatActivity() {
         val intent = Intent()
         intent.putExtra(
             EXTRA_THUMBNAIL_POSITION,
-            ((view_thumbnail.getDuration() / 100) * thumbs.currentProgress).toLong() * 1000
+            ((video_view.duration / 100) * thumbs.currentProgress).toLong() * 1000
         )
         intent.putExtra(EXTRA_URI, videoUri)
         setResult(RESULT_OK, intent)
-        view_thumbnail.onPause()
+//        video_view.onPause()
+        video_view.pause()
         thumbs.onPause()
         finish()
     }
 
     private val seekListener = object : SeekListener {
         override fun onVideoSeeked(percentage: Double) {
-            view_thumbnail.seekTo((percentage.toInt() * view_thumbnail.getDuration()) / 100)
+            video_view.seekTo((percentage.toInt() * video_view.duration) / 100)
         }
     }
 

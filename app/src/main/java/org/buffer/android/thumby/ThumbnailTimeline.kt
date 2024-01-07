@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_thumby.view.*
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_timeline.view.*
 import org.buffer.android.thumby.listener.SeekListener
 
@@ -30,9 +30,9 @@ class ThumbnailTimeline @JvmOverloads constructor(
             field = value
             field?.let {
                 loadThumbnails(it)
-                invalidate()
+//                invalidate()
                 view_seek_bar.setDataSource(context, it, 4)
-//                view_seek_bar.seekTo(currentSeekPosition.toInt())
+                view_seek_bar.seekTo(currentSeekPosition.toInt())
             }
         }
 
@@ -94,6 +94,7 @@ class ThumbnailTimeline @JvmOverloads constructor(
 
         for (i in 0 until thumbnailCount - 1) {
             val frameTime = i * interval
+
             var bitmap = metaDataSource.getFrameAtTime(frameTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC) ?: return
             try {
                 val targetWidth: Int
@@ -108,11 +109,11 @@ class ThumbnailTimeline @JvmOverloads constructor(
                     targetHeight = (bitmap.height * percentage).toInt()
                 }
                 bitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-            container_thumbnails.addView(ThumbnailView(context).apply { setImageBitmap(bitmap) })
+            container_thumbnails.addView(ThumbnailView(context).apply { Glide.with(this).load(bitmap).into(this) })
         }
         metaDataSource.release()
     }
